@@ -9,7 +9,7 @@ const createToken = (_id) => {
 }
 
 /**
- * Statuses:
+ * Status codes:
  * 200: good
  * 400: user error
  * 500: server error
@@ -47,11 +47,35 @@ const registerUser = async (req, res) => {
         //create a token
         const token = createToken(user._id)
     
+        //send response to client/frontend
         res.status(200).json({_id: user._id, name, email, token})
     } catch (error) {
         console.log(error)
-        res.status(500).json
+        res.status(500).json(error)
     }
 }
 
-module.exports = {registerUser}
+const loginUser = async (req, res) => {
+    const {email, password} = req.body
+    try {
+        let user = await userModel.findOne({ email })
+        //user doesn't exist
+        if (!user)
+            return res.status(400).json("Invalid email or password.")
+
+        //check if password is valid
+        const isValidPassword = await bcrypt.compare(password, user.password)
+        if (!isValidPassword)
+            return res.status(400).json("Invalid email or password.")
+
+        //create a token
+        const token = createToken(user._id)
+    
+        //send response to client/frontend
+        res.status(200).json({_id: user._id, name: user.name, email, token})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = { registerUser, loginUser }
