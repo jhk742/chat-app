@@ -4,9 +4,9 @@ import { AuthContext } from '../context/AuthContext'
 
 export default function Register() {
 
-    const { registerInfo, updateRegisterInfo } = useContext(AuthContext)
+    const { registerInfo, updateRegisterInfo, registerUser, registerError, isRegisterLoading } = useContext(AuthContext)
     return (
-        <Form>
+        <Form onSubmit={registerUser}>
             <Row style={{
                 height: "100vh",
                 justifyContent: "center",
@@ -37,12 +37,14 @@ export default function Register() {
                             })}
                         />
                         <Button variant="primary" type="submit">
-                            Register
+                            {isRegisterLoading ? "Creating your account." : "Register"}
                         </Button>
-
-                        <Alert variant="danger">
-                            <span>An error occurred</span>
-                        </Alert>
+                            {
+                                registerError?.error && <Alert variant="danger">
+                                <span>{registerError?.message}</span>
+                                </Alert>
+                            }
+                        
                     </Stack>
                 </Col>
             </Row>
