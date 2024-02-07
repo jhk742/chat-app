@@ -3,7 +3,6 @@ const chatModel = require("../Models/chatModel")
 const createChat = async (req, res) => {
     //extract sender & receiver ids
     const { firstId, secondId } = req.body
-
     try {
         //check if the chat between the two ids already exists
         const chat = await chatModel.findOne({
@@ -20,10 +19,10 @@ const createChat = async (req, res) => {
         })
 
         //save the newChat to the db
-        const res = await newChat.save()
+        const response = await newChat.save()
 
         //and return the newly created chat
-        res.status(200).json(res)
+        res.status(200).json(response)
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
@@ -35,7 +34,7 @@ const findUserChats = async (req, res) => {
     send in the id of the currently logged in user
     to find associated chats
     */
-    const { userId } = req.params.userId
+    const { userId } = req.params
     try {
         const chats = await chatModel.find({
             //filter for all chats that contain userId
