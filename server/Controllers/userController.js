@@ -17,31 +17,34 @@ const createToken = (_id) => {
 
 const registerUser = async (req, res) => {
     try {
+        //first, retrieve data from the req.body (json obj)
         const {name, email, password} = req.body
 
         //check if user already exists in the db
         let user = await userModel.findOne({email})
+
+        //user already exists
         if (user)
             return res.status(400).json("User with the given email already exists.")
     
-        //validation
+        //check to make sure all fields are provided
         if (!name || !email || !password) 
             return res.status(400).json("All fields are required.")
     
-        //checking to see if the fields are strong enough. IF not...
+        //Verify the strength of fields using the validator module
         if (!validator.isEmail(email)) 
             return res.status(400).json("Email must be a valid email.")
         if (!validator.isStrongPassword(password)) 
             return res.status(400).json("Password must be a strong password.")
     
-        //all security conditions passed -> register the user
+        //all security conditions passed -> create a new instance of the userModel
         user = new userModel({name, email, password})
-    
-        //hash the password
+        
+        //hash and assign the password
         const salt = await bcrypt.genSalt(10)
         user.password = await bcrypt.hash(user.password, salt)
     
-        //register user into db
+        //create and register user into db
         await user.save()
     
         //create a token
@@ -99,4 +102,6 @@ const getUsers = async (req, res) => {
         res.status(500).json(error)
     }
 }
+
+//export functions (specifically to userRoute)
 module.exports = { registerUser, loginUser, findUser, getUsers }
