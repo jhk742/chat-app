@@ -39,12 +39,14 @@ export default function Login() {
                             }
                         />
                         <Button variant="primary" type="submit">
-                            {isLoginLoading ? "Logging in" : "Login"}
+                            {isLoginLoading ? "Logging you in" : "Login"}
                         </Button>
 
-                        {loginError?.error && <Alert variant="danger">
-                            <span>{loginError?.message}</span>
-                        </Alert>}
+                        {loginError?.error && 
+                            <Alert variant="danger">
+                                <span>{loginError?.message}</span>
+                            </Alert>
+                        }
                     </Stack>
                 </Col>
             </Row>
