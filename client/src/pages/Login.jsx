@@ -42,8 +42,8 @@ export default function Login() {
                             {isLoginLoading ? "Logging in" : "Login"}
                         </Button>
 
-                        {loginError && <Alert variant="danger">
-                            <span>An error occurred</span>
+                        {loginError?.error && <Alert variant="danger">
+                            <span>{loginError?.message}</span>
                         </Alert>}
                     </Stack>
                 </Col>
