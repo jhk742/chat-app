@@ -15,7 +15,7 @@ export default function NavBar() {
                         Chat App
                     </Link>
                 </h2>
-                <span className="text-warning">Loggin in as {user?.name}</span>
+                {user && <span className="text-warning">Loggin in as {user?.name}</span>}
                 <Nav>
                     <Stack direction="horizontal" gap={3}>
                         {/*if user is logged in, don't show the bottom two links */}
