@@ -4,7 +4,12 @@ import { AuthContext } from '../context/AuthContext'
 
 export default function Register() {
 
-    const { registerInfo, updateRegisterInfo, registerUser, registerError, isRegisterLoading } = useContext(AuthContext)
+    const { registerInfo, 
+        updateRegisterInfo, 
+        registerUser, 
+        registerError, 
+        isRegisterLoading } = useContext(AuthContext)
+
     return (
         <Form onSubmit={registerUser}>
             <Row style={{
@@ -18,16 +23,20 @@ export default function Register() {
                         <Form.Control 
                             type="text" 
                             placeholder="Name" 
-                            onChange={(e) => updateRegisterInfo({
+                            onChange={(e) => 
+                                updateRegisterInfo({
                                 ...registerInfo, name: e.target.value
-                            })}
+                                })
+                            }
                         />
                         <Form.Control 
                             type="email" 
                             placeholder="Email" 
-                            onChange={(e) => updateRegisterInfo({
+                            onChange={(e) => 
+                                updateRegisterInfo({
                                 ...registerInfo, email: e.target.value
-                            })}
+                                })
+                            }
                         />
                         <Form.Control 
                             type="password" 
@@ -37,7 +46,7 @@ export default function Register() {
                             })}
                         />
                         <Button variant="primary" type="submit">
-                            {isRegisterLoading ? "Creating your account." : "Register"}
+                            {isRegisterLoading ? "Creating your account" : "Register"}
                         </Button>
                             {
                                 registerError?.error && <Alert variant="danger">

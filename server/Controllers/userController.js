@@ -63,6 +63,7 @@ const loginUser = async (req, res) => {
     const {email, password} = req.body
     try {
         let user = await userModel.findOne({ email })
+        
         //user doesn't exist
         if (!user)
             return res.status(400).json("Invalid email or password.")

@@ -4,10 +4,14 @@ import { AuthContext } from '../context/AuthContext'
 
 export default function Login() {
 
-    const { registerError } = useContext(AuthContext)
+    const { loginError, 
+        isLoginLoading, 
+        loginUser, 
+        loginInfo, 
+        updateLoginInfo } = useContext(AuthContext)
 
     return (
-        <Form>
+        <Form onSubmit={loginUser}>
             <Row style={{
                 height: "100vh",
                 justifyContent: "center",
@@ -16,13 +20,29 @@ export default function Login() {
                 <Col xs={6}>
                     <Stack gap={3}>
                         <h2>Login</h2>
-                        <Form.Control type="email" placeholder="Email" />
-                        <Form.Control type="password" placeholder="Password" />
+                        <Form.Control 
+                            type="email" 
+                            placeholder="Email" 
+                            onChange={(e) => 
+                                updateLoginInfo({
+                                    ...loginInfo, email: e.target.value
+                                })
+                            }
+                        />
+                        <Form.Control 
+                            type="password" 
+                            placeholder="Password" 
+                            onChange={(e) => 
+                                updateLoginInfo({
+                                    ...loginInfo, password: e.target.value
+                                })
+                            }
+                        />
                         <Button variant="primary" type="submit">
-                            Login
+                            {isLoginLoading ? "Logging in" : "Login"}
                         </Button>
 
-                        {registerError && <Alert variant="danger">
+                        {loginError && <Alert variant="danger">
                             <span>An error occurred</span>
                         </Alert>}
                     </Stack>

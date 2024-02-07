@@ -7,8 +7,14 @@ export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [registerError, setRegisterError] = useState(null)
     const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+    const [loginError, setLoginError] = useState(null)
+    const [isLoginLoading, setIsLoginLoading] = useState(false)
     const [registerInfo, setRegisterInfo] = useState({
         name: "",
+        email: "",
+        password: ""
+    })
+    const [loginInfo, setLoginInfo] = useState({
         email: "",
         password: ""
     })
@@ -32,9 +38,14 @@ export const AuthContextProvider = ({ children }) => {
         setRegisterInfo(info)
     }, [])
 
-    //for form submission (send post request to backend)
+    //update login info
+    const updateLoginInfo = useCallback((info) => {
+        setLoginInfo(info)
+    }, [])
+
+    //for Register.jsx form submission (send post request to backend)
     const registerUser = useCallback(async (e) => {
-        e.preventDefault()
+        e.preventDefault()//to prevent page refresh
         setIsRegisterLoading(true) //indicates that the registration process is in progress
         setRegisterError(null)//clears any registration errors
         const res = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfo))
@@ -55,6 +66,20 @@ export const AuthContextProvider = ({ children }) => {
         setUser(res)
     }, [registerInfo])
 
+    //for Login.jsx form submission
+    const loginUser = useCallback(async (e) => {
+        e.preventDefault()
+        setIsLoginLoading(true)
+        setLoginError(null)
+        const res = await postRequest(`${baseUrl}/users/login`, JSON.stringify(loginInfo))
+        setIsLoginLoading(false)
+        if (res.error) {
+            return setLoginError(res)
+        }
+        localStorage.setItem("User", JSON.stringify(res))
+        setUser(res)
+    }, [loginInfo])
+
     //to log the user out (clear localstorage and set user state var to null)
     //export to and import from NavBar comp
     const logoutUser = useCallback(() => {
@@ -71,7 +96,12 @@ export const AuthContextProvider = ({ children }) => {
             registerUser,
             registerError,
             isRegisterLoading,
-            logoutUser
+            logoutUser,
+            loginUser,
+            updateLoginInfo,
+            loginError,
+            isLoginLoading,
+            loginInfo
         }}>
             {children}
             {/**refers to the child components that will be nested within 
