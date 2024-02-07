@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Alert, Button, Form, Row, Col, Stack } from 'react-bootstrap'
+import { AuthContext } from '../context/AuthContext'
 
 export default function Login() {
+
+    const { registerError } = useContext(AuthContext)
+
     return (
         <Form>
             <Row style={{
@@ -18,9 +22,9 @@ export default function Login() {
                             Login
                         </Button>
 
-                        <Alert variant="danger">
+                        {registerError && <Alert variant="danger">
                             <span>An error occurred</span>
-                        </Alert>
+                        </Alert>}
                     </Stack>
                 </Col>
             </Row>

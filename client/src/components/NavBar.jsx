@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext'
 
 export default function NavBar() {
 
-    const { user } = useContext(AuthContext)
+    const { user, logoutUser } = useContext(AuthContext)
 
     return (
         <Navbar bg="dark" className="mb-4" style={{height: "3.75rem"}}>
@@ -18,12 +18,35 @@ export default function NavBar() {
                 <span className="text-warning">Loggin in as {user?.name}</span>
                 <Nav>
                     <Stack direction="horizontal" gap={3}>
-                        <Link to="/login" className="link-light text-decoration-none">
-                            Login
-                        </Link>
-                        <Link to="/register" className="link-light text-decoration-none">
-                            Register
-                        </Link>
+                        {/*if user is logged in, don't show the bottom two links */}
+                        
+                        {user ?
+                            <Link 
+                                to="/login" 
+                                className="link-light text-decoration-none"
+                                onClick={logoutUser}
+                            >
+                                Logout
+                            </Link>
+                            :
+                            (
+                                <>
+                                    <Link 
+                                        to="/login" 
+                                        className="link-light text-decoration-none"
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link 
+                                        to="/register" 
+                                        className="link-light text-decoration-none"
+                                    >
+                                        Register
+                                    </Link>
+                                </>
+                            ) 
+                        }
+                        
                     </Stack>
                 </Nav>
             </Container>

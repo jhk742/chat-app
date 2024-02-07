@@ -14,7 +14,7 @@ export const AuthContextProvider = ({ children }) => {
     })
 
     /*
-    upon refreshing the page, the user state is reset to null.
+    upon refreshing the page, the user state is reset to null (by default)
     Since the registerUser function below sets the user to the localstorage upon submission,
     we should be able to retrieve that data from localStorage and add the user to the state
     whenever we refresh. -> make use of useEffect (whenever the app loads, retrieve the user
@@ -55,6 +55,13 @@ export const AuthContextProvider = ({ children }) => {
         setUser(res)
     }, [registerInfo])
 
+    //to log the user out (clear localstorage and set user state var to null)
+    //export to and import from NavBar comp
+    const logoutUser = useCallback(() => {
+        localStorage.removeItem("User")
+        setUser(null)
+    }, [])
+
     //provide components with the necessary props
     return (
         <AuthContext.Provider value={{
@@ -63,7 +70,8 @@ export const AuthContextProvider = ({ children }) => {
             updateRegisterInfo, 
             registerUser,
             registerError,
-            isRegisterLoading
+            isRegisterLoading,
+            logoutUser
         }}>
             {children}
             {/**refers to the child components that will be nested within 
