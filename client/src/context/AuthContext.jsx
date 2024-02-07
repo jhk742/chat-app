@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useCallback, useState, useEffect } from 'react'
 import { baseUrl, postRequest } from '../utils/services'
 
 export const AuthContext = createContext()
@@ -13,6 +13,18 @@ export const AuthContextProvider = ({ children }) => {
         password: ""
     })
 
+    /*
+    upon refreshing the page, the user state is reset to null.
+    Since the registerUser function below sets the user to the localstorage upon submission,
+    we should be able to retrieve that data from localStorage and add the user to the state
+    whenever we refresh. -> make use of useEffect (whenever the app loads, retrieve the user
+        from localStorage)
+    We can make use of this info to conditionally render our routes (within App.jsx)
+    */
+    useEffect(() => {
+        const user = localStorage.getItem("User")
+        setUser(JSON.parse(user))
+    }, [])
 
     //callback to update state, registerInfo, whenever the onChange event is triggered
     //within the Register.jsx component's Form
@@ -20,7 +32,7 @@ export const AuthContextProvider = ({ children }) => {
         setRegisterInfo(info)
     }, [])
 
-    //for form submission
+    //for form submission (send post request to backend)
     const registerUser = useCallback(async (e) => {
         e.preventDefault()
         setIsRegisterLoading(true) //indicates that the registration process is in progress

@@ -15,6 +15,7 @@ const createToken = (_id) => {
  * 500: server error
  */
 
+//run when frontend sends a post request
 const registerUser = async (req, res) => {
     try {
         //first, retrieve data from the req.body (json obj)
