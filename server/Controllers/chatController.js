@@ -1,15 +1,16 @@
 const chatModel = require("../Models/chatModel")
 
 //createChat
-//getUserChats
+//findUserChats
 //findChat
 const createChat = async (req, res) => {
     //extract sender & receiver ids
-    const {firstId, secondId} = req.body
+    const { firstId, secondId } = req.body
 
     try {
         //check if the chat between the two ids already exists
         const chat = await chatModel.findOne({
+            //filter for chats that contain both params (ids)
             members: {$all: [firstId, secondId]}
         })
 
@@ -26,6 +27,25 @@ const createChat = async (req, res) => {
 
         //and return the newly created chat
         res.status(200).json(res)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+    }
+}
+
+const findUserChats = async (req, res) => {
+    /*
+    send in the id of the currently logged in user
+    to find associated chats
+    */
+    const { userId } = req.params.userId
+    try {
+        const chats = await chatModel.find({
+            //filter for all chats that contain userId
+            members: {$in: [userId]}
+        })
+
+        res.status(200).json(chats)
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
