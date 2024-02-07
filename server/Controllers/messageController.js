@@ -29,4 +29,4 @@ const getMessages = async (req, res) => {
     }
 }
 
-module.exports = { createMessage }
+module.exports = { createMessage, getMessages }
