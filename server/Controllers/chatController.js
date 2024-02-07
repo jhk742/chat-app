@@ -1,8 +1,5 @@
 const chatModel = require("../Models/chatModel")
 
-//createChat
-//findUserChats
-//findChat
 const createChat = async (req, res) => {
     //extract sender & receiver ids
     const { firstId, secondId } = req.body
@@ -65,3 +62,5 @@ const findChat = async (req, res) => {
         res.status(500).json(error)
     }
 }
+
+module.exports = { createChat, findUserChats, findChat }
