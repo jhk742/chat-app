@@ -18,3 +18,16 @@ export const postRequest = async (url, body) => {
 
     return data
 }
+
+export const getRequest = async (url) => {
+    const res = await fetch(url)
+
+    const data = await res.json()
+
+    if (!res.ok) {
+        let message = data?.message ? data.message : "An error occurred while trying to retrieve the chat log"
+        return {error: true, message}
+    }
+
+    return data
+}
