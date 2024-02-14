@@ -6,7 +6,7 @@ export const useFetchRecipientUser = (chat, user) => {
     const [error, setError] = useState(null)
 
     //find the other id in the members array that is not equal to the _id of the currently logged-in user
-    const recipientId = chat?.members.find((id) => id !== user?._id)
+    const recipientId = chat?.members?.find((id) => id !== user?._id)
 
     useEffect(() => {
         const getUser = async () => {
@@ -17,9 +17,8 @@ export const useFetchRecipientUser = (chat, user) => {
             }
             setRecipientUser(response)
         }
-
         getUser()
-    }, [])
+    }, [recipientId])
 
     return { recipientUser }
 }

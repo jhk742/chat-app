@@ -12,7 +12,7 @@ export const ChatContextProvider = ({ children, user }) => {
     const [messages, setMessages] = useState(null)
     const [isMessagesLoading, setIsMessagesLoading] = useState(false)
     const [messagesError, setMessagesError] = useState(null)
-
+    
     //to fetch the users with whom the logged-in user has not started a conversation with
     useEffect(() => {
         const getPotentialUsers = async () => {
@@ -55,6 +55,7 @@ export const ChatContextProvider = ({ children, user }) => {
         getUserChats()
     }, [user])
 
+    //retrieve messages of a specific chat
     useEffect(() => {
         const getMessages = async () => {
             setIsMessagesLoading(true)
@@ -70,6 +71,7 @@ export const ChatContextProvider = ({ children, user }) => {
         getMessages()
     }, [currentChat])
 
+    //for potential chats
     const createChat = useCallback(async (firstId, secondId) => {
         const res = await postRequest(`${baseUrl}/chats`, JSON.stringify({
             firstId,
@@ -83,6 +85,7 @@ export const ChatContextProvider = ({ children, user }) => {
         setUserChats((prev) => [...prev, res])
     }, [])
 
+    //for chats that have already been initiated
     const updateCurrentChat = useCallback((chat) => {
         setCurrentChat(chat)
     }, [])
@@ -94,7 +97,11 @@ export const ChatContextProvider = ({ children, user }) => {
             userChatsError,
             potentialChats,
             createChat,
-            updateCurrentChat
+            updateCurrentChat,
+            messages,
+            isMessagesLoading,
+            messagesError,
+            currentChat
         }}>
             {children}
         </ChatContext.Provider>
