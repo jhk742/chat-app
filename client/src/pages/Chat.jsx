@@ -7,7 +7,7 @@ import { AuthContext } from '../context/AuthContext'
 
 export default function Chat() {
   const { user } = useContext(AuthContext)
-  const { userChats, isUserChatsLoading, userChatsError } = useContext(ChatContext)
+  const { userChats, isUserChatsLoading, updateCurrentChat } = useContext(ChatContext)
 
   return (
     <div>
@@ -19,8 +19,14 @@ export default function Chat() {
               {isUserChatsLoading && <span>Loading chats</span>}
               {userChats?.map((chat, index) => {
                 return (
-                  <div key={index}>
-                    <UserChat chat={chat} user={user}/>
+                  <div 
+                    key={index} 
+                    onClick={() => updateCurrentChat(chat)}
+                  >
+                    <UserChat 
+                      chat={chat} 
+                      user={user} 
+                    />
                   </div>
                 )
               })}
