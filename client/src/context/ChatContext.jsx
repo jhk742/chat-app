@@ -12,6 +12,8 @@ export const ChatContextProvider = ({ children, user }) => {
     const [messages, setMessages] = useState(null)
     const [isMessagesLoading, setIsMessagesLoading] = useState(false)
     const [messagesError, setMessagesError] = useState(null)
+    const [sendTextMessageError, setSendTextMessageError] = useState(null)
+    const [newMessage, setNewMessage] = useState(null)
     
     //to fetch the users with whom the logged-in user has not started a conversation with
     useEffect(() => {
@@ -89,6 +91,25 @@ export const ChatContextProvider = ({ children, user }) => {
     const updateCurrentChat = useCallback((chat) => {
         setCurrentChat(chat)
     }, [])
+
+    //to send messages
+    const sendTextMessage = useCallback(async (textMessage, sender, currentChatId, setTextMessage) => {
+        if (!textMessage) return console.log("You must type something...")
+        
+        const res = await postRequest(`${baseUrl}/messages`, JSON.stringify({
+            chatId: currentChatId,
+            senderId: sender,
+            text: textMessage
+        }))
+
+        if (res.error) {
+            return setSendTextMessageError(res)
+        }
+
+        setNewMessage(res)
+        setMessages(prev => [...prev, res])
+        setTextMessage("")
+    }, [])
     
     return (
         <ChatContext.Provider value = {{
@@ -101,7 +122,8 @@ export const ChatContextProvider = ({ children, user }) => {
             messages,
             isMessagesLoading,
             messagesError,
-            currentChat
+            currentChat,
+            sendTextMessage
         }}>
             {children}
         </ChatContext.Provider>
