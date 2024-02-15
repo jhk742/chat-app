@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Container, Nav, Navbar, Stack } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import Notification from './chat/Notification'
 
 export default function NavBar() {
 
@@ -18,8 +19,8 @@ export default function NavBar() {
                 {user && <span className="text-warning">Logged in as {user?.name}</span>}
                 <Nav>
                     <Stack direction="horizontal" gap={3}>
+                        <Notification />
                         {/*if user is logged in, don't show the bottom two links */}
-                        
                         {user ?
                             <Link 
                                 to="/login" 
