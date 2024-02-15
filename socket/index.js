@@ -26,6 +26,14 @@ io.on("connection", (socket) => {
         io.emit("getOnlineUsers", onlineUsers)
     })
 
+    //listen to the disconnect event
+    socket.on("disconnect", () => {
+        //update the onlineUsers array
+        onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
+        
+        io.emit("getOnlineUsers", onlineUsers)
+    })
+
     /**
      * recap of what's happening above:
        whenever we log in, the socket server creates a new connection

@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useFetchRecipientUser } from '../../hooks/useFetchRecipient'
 import { Stack } from 'react-bootstrap'
 import avatar from '../../assets/avatar.svg'
+import { ChatContext } from '../../context/ChatContext'
 export default function UserChat( { chat, user }) {
 
     //data of the receiving user 
     const { recipientUser } = useFetchRecipientUser(chat, user)
+
+    const { onlineUsers } = useContext(ChatContext)
 
     return (
         <Stack 
@@ -34,7 +37,11 @@ export default function UserChat( { chat, user }) {
                     <div className="this-user-notifications">
                         2
                     </div>
-                    <div className="user-online"></div>
+                    <div className={
+                        onlineUsers?.some((user) => user.userId === user._id) ?
+                        "user-online" : 
+                        ""
+                    }></div>
                 </div>
         </Stack>
     )
