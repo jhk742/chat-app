@@ -21,7 +21,19 @@ io.on("connection", (socket) => {
             socketId: socket.id
         })
         console.log("ONLINE USERS: ", onlineUsers)
+
+        //broadcast who is online
+        io.emit("getOnlineUsers", onlineUsers)
     })
+
+    /**
+     * recap of what's happening above:
+       whenever we log in, the socket server creates a new connection
+       we listen to an event (on), addNewUser, that's emitted from the client (inside a useEffect)
+       we add it to the onlineUsers array. From here, we send (emit) and event, getOnlineUsers,
+       to any client that's up and running to inform them of the others who are currently online.
+       bi-directional comms
+     */
 });
 
 io.listen(3000);

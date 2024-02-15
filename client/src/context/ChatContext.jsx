@@ -16,6 +16,9 @@ export const ChatContextProvider = ({ children, user }) => {
     const [sendTextMessageError, setSendTextMessageError] = useState(null)
     const [newMessage, setNewMessage] = useState(null)
     const [socket, setSocket] = useState(null)
+    const [onlineUsers, setOnlineUsers] = useState([])
+
+    console.log("ONLINE USERS ", onlineUsers)
 
     //initialize socket
     useEffect(() => {
@@ -28,10 +31,17 @@ export const ChatContextProvider = ({ children, user }) => {
         //add user as a dependency so that whenever we have a new user, we set a new socket
     }, [user])
 
-    //to trigger the "addNewUser" event for socket.io
+    //to trigger/send events
     useEffect(() => {
         if (socket === null) return
+        //when a new user logs in
         socket.emit("addNewUser", user?._id)
+
+        //listens for the getOnlineUsers event from (socket)
+        //we can now pass this array of onlineUsers as a value (via context provider)
+        socket.on("getOnlineUsers", (res) => {
+            setOnlineUsers(res)
+        })
     }, [socket])
 
     //to fetch the users with whom the logged-in user has not started a conversation with
@@ -142,7 +152,8 @@ export const ChatContextProvider = ({ children, user }) => {
             isMessagesLoading,
             messagesError,
             currentChat,
-            sendTextMessage
+            sendTextMessage,
+            onlineUsers
         }}>
             {children}
         </ChatContext.Provider>
