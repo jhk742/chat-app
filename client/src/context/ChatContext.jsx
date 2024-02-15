@@ -31,7 +31,7 @@ export const ChatContextProvider = ({ children, user }) => {
         //add user as a dependency so that whenever we have a new user, we set a new socket
     }, [user])
 
-    //to trigger/send events
+    //to trigger/send events (addOnlineUsers)
     useEffect(() => {
         if (socket === null) return
         //when a new user logs in
@@ -42,7 +42,36 @@ export const ChatContextProvider = ({ children, user }) => {
         socket.on("getOnlineUsers", (res) => {
             setOnlineUsers(res)
         })
+
+        return () => {
+            socket.off("getOnlineUsers")
+        }
     }, [socket])
+
+    //sending message to the server
+    useEffect(() => {
+        if (socket === null) return
+
+        const recipientId = currentChat?.members?.find((id) => id !== user?._id)
+
+        socket.emit("sendMessage", {...newMessage, recipientId})
+
+    }, [newMessage])
+
+    //receive message
+    useEffect(() => {
+        if (socket === null) return
+
+        socket.on("getMessage", res => {
+            if (currentChat?._id !== res.chatId) return
+
+            setMessages((prev) => [...prev, res])
+        })
+
+        return () => {
+            socket.off("getMessage")
+        }
+    }, [socket, currentChat])
 
     //to fetch the users with whom the logged-in user has not started a conversation with
     useEffect(() => {

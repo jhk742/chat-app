@@ -7,7 +7,6 @@ export default function UserChat( { chat, user }) {
 
     //data of the receiving user 
     const { recipientUser } = useFetchRecipientUser(chat, user)
-
     const { onlineUsers } = useContext(ChatContext)
 
     return (
@@ -38,7 +37,7 @@ export default function UserChat( { chat, user }) {
                         2
                     </div>
                     <div className={
-                        onlineUsers?.some((user) => user.userId === user._id) ?
+                        onlineUsers?.some((user) => user?.userId === recipientUser?._id) ?
                         "user-online" : 
                         ""
                     }></div>
