@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { baseUrl, getRequest, postRequest } from '../utils/services'
+import { io } from 'socket.io-client'
 
 export const ChatContext = createContext()
 
@@ -14,7 +15,25 @@ export const ChatContextProvider = ({ children, user }) => {
     const [messagesError, setMessagesError] = useState(null)
     const [sendTextMessageError, setSendTextMessageError] = useState(null)
     const [newMessage, setNewMessage] = useState(null)
-    
+    const [socket, setSocket] = useState(null)
+
+    //initialize socket
+    useEffect(() => {
+        const newSocket = io("http://localhost:3000")
+        setSocket(newSocket)
+
+        return () => {
+            newSocket.disconnect()
+        }
+        //add user as a dependency so that whenever we have a new user, we set a new socket
+    }, [user])
+
+    //to trigger the "addNewUser" event for socket.io
+    useEffect(() => {
+        if (socket === null) return
+        socket.emit("addNewUser", user?._id)
+    }, [socket])
+
     //to fetch the users with whom the logged-in user has not started a conversation with
     useEffect(() => {
         const getPotentialUsers = async () => {
